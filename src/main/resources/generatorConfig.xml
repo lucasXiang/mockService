@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE generatorConfiguration    
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"    
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">    
+<generatorConfiguration>    
+	<classPathEntry    
+            location="D:\apache-maven-3.5.3\repo\mysql\mysql-connector-java\5.1.31\mysql-connector-java-5.1.31.jar"/>
+	<context id="mysqlTables" targetRuntime="MyBatis3">
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.1.6:3306/10bei_portal" 
+			userId="readonly" password="123456" />
+		<!--指定生成的类型为java类型，避免数据库中number等类型字段 -->
+		<javaTypeResolver>
+			<property name = "forceBigDecimals"  value="false" />
+		</javaTypeResolver>
+		<!--自动生成的实体的存放包路径 -->
+		<javaModelGenerator targetPackage="com.ideacome.mock.model"
+			targetProject="mock-service">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!--自动生成的*Mapper.xml文件存放路径 -->
+		<sqlMapGenerator targetPackage="com.ideacome.mock.mapper"
+			targetProject="mock-service" >
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!--自动生成的*Mapper.java存放路径 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.ideacome.mock.mapper" targetProject="mock-service">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<table tableName="channel_push_config" domainObjectName="ChannelPushConfig"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<generatedKey column="ID" sqlStatement="selectuuid_short()"
+				identity="true" />
+		</table>
+	</context>
+</generatorConfiguration>

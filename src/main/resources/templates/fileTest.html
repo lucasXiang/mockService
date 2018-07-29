@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:v-validate="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+    <title>Title</title>
+    <link rel="stylesheet" href="css/test.css" type="text/css" />
+</head>
+<body>  
+  <form action="/file/upload" method="POST" enctype="multipart/form-data">  
+  	<input type = "text" name ="name"/>
+  	<br/>
+    <input type="file" name="file.docx"/>  
+    <input type="submit" value="Upload"/>   
+  </form>  
+</body>  
+</html>  

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:v-validate="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+    <title>Title</title>
+    <link rel="stylesheet" href="css/test.css" type="text/css" />
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    	var curProPath = window.document.location.href;
+    	function doAddOne(){
+    		var inputs = $("#pushConfTable").find("input");
+    		var dataStr = "{";
+    		for(i=0;i<inputs.length;i++){
+    			if($(inputs[i]).val() == undefined || $(inputs[i]).val().trim() == ''){
+    				alert("字段 " + $(inputs[i]).attr("name") + " 不能为空。");
+    				return;
+    			}
+    			if($(inputs[i]).attr("name")=='ifAutoInsurance' || $(inputs[i]).attr("name") == 'open'){
+    				if(! /\d/.test($(inputs[i]).val().trim())){
+    					alert("字段 " + $(inputs[i]).attr("name") + " 值不能为非数字。");
+    					return;
+    				}
+    			}
+    			dataStr += "\""+$(inputs[i]).attr("name") + "\"" ;
+    			dataStr += ":";
+    			dataStr += "\""+$(inputs[i]).val().trim()+"\"";
+    			if(i+1 != inputs.length){
+    				dataStr += ",";
+    			}
+    		}
+    		dataStr += "}";
+    		console.log(dataStr);
+    		doRequest(JSON.parse(dataStr));
+    	}
+    	function doRequest(dataStr){
+    		$.ajax({
+			  type: 'POST',
+			  url: curProPath.substring(0,curProPath.lastIndexOf("/"))+"/mock/addOneChannelPushConf",
+			  data: dataStr,
+			  dataType: "json",
+			  success: function(){
+				  alert("添加成功");
+				window.location.replace(curProPath);
+			  },
+			  error:function(){
+				  alert("请求出错。。。");
+			  }
+			});
+    	}
+    	function backList(){
+    		var url = curProPath.substring(0,curProPath.lastIndexOf("/"))+"/getChannelPushConfigInfo";
+    		window.location.replace(url);
+    	}
+    </script>
+</head>
+<body>
+    <h1>表：channel_push_config 数据添加</h1>
+    <p><button onclick="backList();">返回列表</button></p>
+    <table style="border: 1px solid black;border-collapse:collapse;" id="pushConfTable">
+    	<tr>
+    		<td style="border: 1px solid black;">channel_no</td>
+    		<td style="border: 1px solid black;"><input type="text" name="channelNo"></td>
+    	</tr>
+<!--     	<tr> -->
+<!--     		<td style="border: 1px solid black;">if_auto_insurance(int)</td> -->
+<!--     		<td style="border: 1px solid black;"><input type="text" name="ifAutoInsurance"></td> -->
+<!--     	</tr> -->
+    	<tr>
+    		<td style="border: 1px solid black;">open(int 0-开启；1-关闭)</td>
+    		<td style="border: 1px solid black;"><input type="text" name="open"></td>
+    	</tr>
+    	<tr>
+    		<td style="border: 1px solid black;">url</td>
+    		<td style="border: 1px solid black;"><input type="text" name="url"></td>
+    	</tr>
+    	<tr>
+    		<td style="border: 1px solid black;">channel_param</td>
+    		<td style="border: 1px solid black;"><input type="text" name="channelParam"></td>
+    	</tr>
+    	<tr>
+    		<td style="border: 1px solid black;">tag</td>
+    		<td style="border: 1px solid black;"><input type="text" name="tag"></td>
+    	</tr>
+    	<tr>
+    		<td colspan="2" align="center" style="border: 1px solid black;"><button onclick="doAddOne();">添加</button></td>
+    	</tr>
+    </table>
+    
+</body>
+</html>

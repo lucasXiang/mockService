@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:v-validate="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+    <title>Title</title>
+    <link rel="stylesheet" href="css/test.css" type="text/css" />
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    	var curProPath = window.document.location.href;
+    	function edit(event){
+    		var $obj$ = $(event).parent().parent();
+    		var inputs = $obj$.find("input");
+    		for(i=0;i<inputs.length;i++){
+    			if($(inputs[i]).attr("readonly") == "readonly"){
+    				$(inputs[i]).removeAttr("readonly");
+    			}
+    		}
+    		
+    		console.log(curProPath);
+    	}
+    	function save(event){
+    		var $obj$ = $(event).parent().parent();
+    		var inputs = $obj$.find("input");
+    		var flag = true;
+    		for(i=0;i<inputs.length;i++){
+    			if($(inputs[i]).attr("readonly") != "readonly"){
+    				$(inputs[i]).attr("readonly","readonly");
+    			}else{
+    				flag = false;
+    			}
+    		}
+    		var children = $obj$.children();
+    		
+    		if(flag){
+    			$.ajax({
+   				  type: 'POST',
+   				  url: curProPath.substring(0,curProPath.lastIndexOf("/"))+"/mock/updateOneChannelPushConf",
+   				  data: {
+   					  "id" :  $(children[0]).text(),
+   					  "channelNo" : $(children[1]).find("input")[0].value,
+//    					  "ifAutoInsurance" : $(children[2]).find("input")[0].value,
+   					  "open" : $(children[2]).find("input")[0].value,
+   					  "url" : $(children[3]).find("input")[0].value,
+   					  "channelParam" : $(children[4]).find("input")[0].value,
+   					  "tag" : $(children[5]).find("input")[0].value
+   				  },
+   				  dataType: "json",
+   				  success: function(){
+   					  alert("修改成功");
+   					window.location.replace(curProPath);
+   				  },
+   				  error:function(){
+   					  alert("请求出错。。。");
+   				  }
+   				});
+    		}
+    	}
+    	function query(){
+    		if(curProPath.lastIndexOf("?")>0){
+    			window.location.replace(curProPath.substring(0,curProPath.lastIndexOf("?"))+"?"+"channelNo="+$("#channelNo").val());
+    		}else{
+    			window.location.replace(curProPath+"?"+"channelNo="+$("#channelNo").val());
+    		}
+    		
+    	}
+    	function add(){
+    		var url = curProPath.substring(0,curProPath.lastIndexOf("/"))+"/toAddPage";
+    		window.location.replace(url);
+    	}
+    </script>
+</head>
+<body>
+    <h1>表：channel_push_config 数据展现</h1>
+    <p>
+    	<input id="channelNo" type="text" placeholder="请输入渠道编号" th:value="${channelNo}" /> &nbsp;&nbsp;&nbsp;&nbsp;
+    	<button onclick="query();">查询</button> &nbsp;&nbsp;&nbsp;&nbsp;
+    	<button onclick="add();">新增</button>
+    </p>
+    <table style="border: 1px solid black;border-collapse:collapse;">
+	    <thead align="center">
+	    	<tr>
+	    		<td style="border: 1px solid black;">id</td>
+	    		<td style="border: 1px solid black;">channel_no</td>
+<!-- 	    		<td style="border: 1px solid black;">if_auto_insurance(int)</td> -->
+	    		<td style="border: 1px solid black;">open(int 1-开启；0-关闭)</td>
+	    		<td style="border: 1px solid black;">url</td>
+	    		<td style="border: 1px solid black;">channel_param（true/false）</td>
+	    		<td style="border: 1px solid black;">tag</td>
+	    		<td style="border: 1px solid black;">操作</td>
+	    	</tr>
+	    </thead>
+	    <tbody>
+	    	<tr th:each="channelPushConfig:${channelPushConfigs}">
+	    		<td th:text="${channelPushConfig.id}" style="border: 1px solid black;"></td>
+	    		<td style="border: 1px solid black;"><input th:value="${channelPushConfig.channelNo}" readonly="readonly" /></td>
+<!-- 	    		<td style="border: 1px solid black;"><input th:value="${channelPushConfig.ifAutoInsurance}" readonly="readonly" /></td> -->
+	    		<td style="border: 1px solid black;"><input th:value="${channelPushConfig.open}" readonly="readonly" /></td>
+	    		<td style="border: 1px solid black;"><input size="45" th:value="${channelPushConfig.url}" readonly="readonly" /></td>
+	    		<td style="border: 1px solid black;"><input th:value="${channelPushConfig.channelParam}" readonly="readonly" /></td>
+	    		<td style="border: 1px solid black;"><input th:value="${channelPushConfig.tag}" readonly="readonly" /></td>
+	    		<td style="border: 1px solid black;"><button onclick="edit(this);">编辑</button>&nbsp;&nbsp;<button onclick="save(this);">保存</button></td>
+	    	</tr>
+	    </tbody>
+    </table>
+    
+</body>
+</html>
